@@ -1,0 +1,27 @@
+{
+  "name": "my-micro-saas",
+  "version": "1.0.0",
+  "description": "Este é o painel de controle para gerenciamento de clientes e campanhas de marketing.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seu_usuario/my-micro-saas.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/seu_usuario/my-micro-saas/issues"
+  },
+  "homepage": "https://github.com/seu_usuario/my-micro-saas#readme",
+  "dependencies": {
+    "autoprefixer": "^10.5.0",
+    "axios": "^1.15.2",
+    "postcss": "^8.5.13",
+    "react-router-dom": "^7.14.2",
+    "tailwindcss": "^4.2.4"
+  }
+}
