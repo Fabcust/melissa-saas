@@ -1,71 +1,47 @@
 const express = require('express');
-console.log('>>> USER.JS CARREGADO <<<');
-const router = express.Router();
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+const bcrypt = require('bcrypt');
 
-// GET /api/users/teste - ROTA DE TESTE
-router.get('/teste', (req, res) => {
-    console.log('>>> ROTA /api/users/teste CHAMADA <<<');
-    res.json({ msg: 'user.js funcionando', timestamp: new Date() });
-});
+dotenv.config();
 
-// POST /api/users/register
-router.post('/register', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        console.log('>>> REGISTER CHAMADO:', email);
+const router = express.Router();
 
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Email e senha são obrigatórios' });
-        }
-
-        const userExists = await User.findOne({ email });
-        if (userExists) {
-            return res.status(400).json({ error: 'Email já cadastrado' });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const user = await User.create({
-            email,
-            password: hashedPassword,
-            credits: 0
-        });
-
-        res.status(201).json({ message: 'Usuário criado', userId: user._id });
-    } catch (err) {
-        console.log('ERRO NO REGISTER:', err.message);
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// POST /api/users/login
 router.post('/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        console.log('>>> LOGIN CHAMADO:', email);
-
-        const user = await User.findOne({ email });
-        if (!user) {
-            console.log('USUÁRIO NÃO ENCONTRADO:', email);
-            return res.status(400).json({ error: 'Usuário não encontrado' });
-        }
-
-        const validPass = await bcrypt.compare(password, user.password);
-        if (!validPass) {
-            console.log('SENHA INVÁLIDA PARA:', email);
-            return res.status(400).json({ error: 'Senha inválida' });
-        }
-
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-        console.log('LOGIN OK:', email);
-        res.json({ token, credits: user.credits });
-    } catch (err) {
-        console.log('ERRO NO LOGIN:', err.message);
-        res.status(500).json({ error: err.message });
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    console.log('Usuário encontrado:', user); // Log para verificar
+    if (!user) {
+      return res.status(401).json({ message: 'Usuário não encontrado' });
     }
+    const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Senha do usuário:', user.password); // Log para verificação
+    console.log('Comparação da senha:', { enteredPassword: password, dbPassword: user.password, isMatch });
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Credenciais inválidas' });
+    }
+    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    console.log('Token gerado:', token);
+    res.status(200).json({ token, credits: user.credits });
+  } catch (error) {
+    console.error('Erro no login:', error);
+    res.status(500).json({ message: 'Erro interno do servidor' });
+  }
+});
+
+router.get('/test-login', async (req, res) => {
+  // Usar administrador
+  const adminUser = await User.findOne({ email: 'admin@example.com' });
+  if (!adminUser) return res.status(404).json({ message: 'Usuário Admin não encontrado' });
+  // Gera o token se o usuário existir
+  const token = jwt.sign({ id: adminUser._id, email: adminUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  res.status(200).json({ token });
+});
+
+router.get('/activities', async (req, res) => {
+  //... Código existente para obter atividades
 });
 
 module.exports = router;
