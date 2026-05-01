@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api from '../services/api'
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true)
@@ -13,11 +13,8 @@ export default function Login() {
     e.preventDefault()
     setError('')
     try {
-      const url = isLogin 
-        ? 'https://melissa-saas-production.up.railway.app/api/users/login'
-        : 'https://melissa-saas-production.up.railway.app/api/users/register'
-      
-      const { data } = await axios.post(url, { email, password })
+      const endpoint = isLogin ? '/users/login' : '/users/register'
+      const { data } = await api.post(endpoint, { email, password })
       
       if (isLogin) {
         localStorage.setItem('token', data.token)
