@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import api from '../services/api'
+import axios from 'axios'
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true)
@@ -13,8 +13,11 @@ export default function Login() {
     e.preventDefault()
     setError('')
     try {
-      const endpoint = isLogin ? '/users/login' : '/users/register'
-      const { data } = await api.post(endpoint, { email, password })
+      const url = isLogin 
+        ? 'https://melissa-saas-production.up.railway.app/api/users/login'
+        : 'https://melissa-saas-production.up.railway.app/api/users/register'
+      
+      const { data } = await axios.post(url, { email, password })
       
       if (isLogin) {
         localStorage.setItem('token', data.token)
@@ -23,9 +26,10 @@ export default function Login() {
       } else {
         alert('Usuário criado! Faça login.')
         setIsLogin(true)
+        setPassword('')
       }
     } catch (err) {
-      setError(err.response?.data?.error || err.response?.data?.message || 'Erro')
+      setError(err.response?.data?.error || err.response?.data?.message || 'Erro ao conectar com servidor')
     }
   }
 
