@@ -23,9 +23,10 @@ export default function Login() {
       } else {
         alert('Usuário criado! Faça login.')
         setIsLogin(true)
+        setPassword('')
       }
     } catch (err) {
-      setError(err.response?.data?.error || err.response?.data?.message || 'Erro')
+      setError(err.response?.data?.error || err.response?.data?.message || 'Erro ao conectar com servidor')
     }
   }
 

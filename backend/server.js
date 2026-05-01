@@ -1,4 +1,3 @@
-const dotenv = require('dotenv');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -6,16 +5,20 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Carrega .env
-dotenv.config({ path: `${__dirname}/.env` });
-
-// CORS tem que vir ANTES das rotas e do express.json
+// CORS tem que vir ANTES de tudo
 app.use(cors({
-  origin: ['http://192.168.0.15:5173', 'http://localhost:5173'],
+  origin: [
+    'http://localhost:5173', 
+    'http://192.168.0.15:5173',
+    'https://melissa-saas.vercel.app'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Express 5+ usa /.*/ em vez de *
+app.options(/.*/, cors());
 
 app.use(express.json());
 
@@ -32,9 +35,9 @@ app.use('/api/credits', creditRoutes);
 app.use('/api/users', userRoutes);
 
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'OK' });
+    res.json({ status: 'OK', message: 'Melissa API rodando' });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });

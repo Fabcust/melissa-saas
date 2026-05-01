@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Usa o IP do servidor, não localhost
 const api = axios.create({
   baseURL: 'http://192.168.0.15:3001/api' // Altere para a URL do backend no Railway, se aplicável
 });
