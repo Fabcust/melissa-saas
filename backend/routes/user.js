@@ -54,4 +54,4 @@ router.post('/login', async (req, res) => {
     }
 });
 
-module.exports = router; // <- ESSA LINHA QUE FALTAVA
+module.exports = router;
