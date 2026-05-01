@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User'); // Ajusta o path se for diferente
+const User = require('../models/User');
 
 // POST /api/users/register
 router.post('/register', async (req, res) => {
@@ -54,4 +54,4 @@ router.post('/login', async (req, res) => {
     }
 });
 
-module.exports = router;
+module.exports = router; // <- ESSA LINHA QUE FALTAVA
