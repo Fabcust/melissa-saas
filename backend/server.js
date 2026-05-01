@@ -7,7 +7,11 @@ const PORT = process.env.PORT || 3001;
 
 // CORS tem que vir ANTES das rotas e do express.json
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://melissa-saas.vercel.app'],
+  origin: [
+    'http://localhost:5173', 
+    'http://192.168.0.15:5173',
+    'https://melissa-saas.vercel.app'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
