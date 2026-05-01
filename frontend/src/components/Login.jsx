@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault()
     setError('')
     try {
-      const endpoint = isLogin ? '/api/users/login' : '/api/users/register'
+      const endpoint = isLogin ? '/users/login' : '/users/register'
       const { data } = await api.post(endpoint, { email, password })
       
       if (isLogin) {
