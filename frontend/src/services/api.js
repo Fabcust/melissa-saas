@@ -1,8 +1,7 @@
 import axios from 'axios'
 
-// Usa o IP do servidor, não localhost
 const api = axios.create({
-  baseURL: 'http://192.168.0.15:3001/api'
+  baseURL: import.meta.env.VITE_API_URL || 'https://melissa-saas-production.up.railway.app/api'
 })
 
 api.interceptors.request.use((config) => {
