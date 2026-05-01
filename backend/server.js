@@ -34,18 +34,21 @@ app.use('/api/users', userRoutes);
 
 // Webhook para atualizações do Mercado Pago
 app.post('/webhook', async (req, res) => {
-  const { id, event_type } = req.body;
+ const { id, type } = req.body;
+ console.log('Webhook recebido:', type, id);
 
-  try {
-    const paymentDetails = await mercadopago.payment.get(id);
+ try {
+  if (type === 'payment' || type === 'subscription_preapproval') {
+ // Aqui você busca os detalhes no Mercado Pago e atualiza o User
+ console.log('Processando pagamento...');
+ }
+ return res.status(200).send('OK');
+ } catch (error) {
+ console.error('Erro no Webhook:', error);
+ return res.status(500).send('Erro Interno');
+ }
+});
 
-    _type === 'subscription.created') {
-      const userEmail = paymentDetails.data.payer.email; // Obter o email do pagamento
-      const user = await User.findOne({ email: userEmail });
-
-      if (user) {
-        const credits = 50; // Créditos prometidos
-        await User.updateOne({ _id: user._id }, { $inc: { credits: credits } });
-        console.log('Créditos adicionados ao usuário:', userEmail);
-      }
-    }
+app.listen(PORT, () => {
+ console.log(`Servidor rodando na porta ${PORT}`);
+});
