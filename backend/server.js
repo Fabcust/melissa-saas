@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// CORS tem que vir ANTES das rotas e do express.json
+// CORS tem que vir ANTES de tudo
 app.use(cors({
   origin: [
     'http://localhost:5173', 
@@ -17,9 +17,12 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+// Libera o preflight pra todas as rotas
+app.options('*', cors());
+
 app.use(express.json());
 
-// MongoDB - Railway injeta as variáveis direto
+// MongoDB
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log('Erro MongoDB:', err));
@@ -35,7 +38,6 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', message: 'Melissa API rodando' });
 });
 
-// IMPORTANTE: '0.0.0.0' pra Railway funcionar
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
