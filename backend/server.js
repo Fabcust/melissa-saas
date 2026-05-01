@@ -39,4 +39,13 @@ app.post('/webhook', async (req, res) => {
   try {
     const paymentDetails = await mercadopago.payment.get(id);
 
-    if (event_type === 'payment.created' || event
+    _type === 'subscription.created') {
+      const userEmail = paymentDetails.data.payer.email; // Obter o email do pagamento
+      const user = await User.findOne({ email: userEmail });
+
+      if (user) {
+        const credits = 50; // Créditos prometidos
+        await User.updateOne({ _id: user._id }, { $inc: { credits: credits } });
+        console.log('Créditos adicionados ao usuário:', userEmail);
+      }
+    }
