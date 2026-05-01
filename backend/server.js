@@ -17,8 +17,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Libera o preflight pra todas as rotas
-app.options('*', cors());
+// Express 5+ usa /.*/ em vez de *
+app.options(/.*/, cors());
 
 app.use(express.json());
 
