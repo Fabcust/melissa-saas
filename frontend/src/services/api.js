@@ -1,14 +1,14 @@
-import axios from 'axios'
+import axios from 'axios';
 
 // Usa o IP do servidor, não localhost
 const api = axios.create({
-  baseURL: 'http://192.168.0.15:3001/api'
-})
+  baseURL: 'http://192.168.0.15:3001/api' // Altere para a URL do backend no Railway, se aplicável
+});
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
-  if (token) config.headers.Authorization = `Bearer ${token}`
-  return config
-})
+  const token = localStorage.getItem('token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
 
-export default api
+export default api;
